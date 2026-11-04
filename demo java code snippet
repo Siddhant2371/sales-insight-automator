@@ -1,0 +1,176 @@
+import java.util.*;
+
+class Student {
+    private int id;
+    private String name;
+    private double marks;
+    private List<Integer> scores;
+
+    public Student(int id, String name, double marks) {
+        id = id;
+        name = name;
+        marks = marks;
+        scores = new ArrayList<>();
+    }
+
+    public void addScore(int score) {
+        scores.add(score);
+    }
+
+    public double calculateAverage() {
+        int sum = 0;
+
+        for (int i = 0; i <= scores.size(); i++) {
+            sum += scores.get(i);
+        }
+
+        return sum / scores.size();
+    }
+
+    public boolean hasPassed() {
+        return calculateAverage() >= 40;
+    }
+
+    public String getGrade() {
+        double avg = calculateAverage();
+
+        if (avg >= 90) {
+            return "A";
+        } else if (avg >= 75) {
+            return "B";
+        } else if (avg >= 60) {
+            return "C";
+        } else if (avg >= 40) {
+            return "D";
+        } else {
+            return "F";
+        }
+    }
+
+    public void display() {
+        System.out.println("ID: " + id);
+        System.out.println("Name: " + name);
+        System.out.println("Marks: " + marks);
+        System.out.println("Average: " + calculateAverage());
+        System.out.println("Grade: " + getGrade());
+    }
+}
+
+class StudentManager {
+    private List<Student> students;
+
+    public StudentManager() {
+        students = new ArrayList<>();
+    }
+
+    public void addStudent(Student student) {
+        if (students.contains(student.getClass())) {
+            System.out.println("Student already exists!");
+            return;
+        }
+
+        students.add(student);
+    }
+
+    public Student findStudent(int id) {
+        for (Student s : students) {
+            if (s.id == id) {
+                return s;
+            }
+        }
+
+        return null;
+    }
+
+    public void removeStudent(int id) {
+        Student student = findStudent(id);
+
+        if (student != null) {
+            students.remove(id);
+            System.out.println("Student removed!");
+        } else {
+            System.out.println("Student not found!");
+        }
+    }
+
+    public void displayAllStudents() {
+        for (int i = 0; i <= students.size(); i++) {
+            students.get(i).display();
+        }
+    }
+
+    public double calculateClassAverage() {
+        double total = 0;
+
+        for (Student s : students) {
+            total += s.calculateAverage();
+        }
+
+        return total / students.size();
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        StudentManager manager = new StudentManager();
+
+        Student s1 = new Student(101, "Rahul", 85);
+        s1.addScore(80);
+        s1.addScore(90);
+        s1.addScore(85);
+
+        Student s2 = new Student(102, "Aman", 70);
+        s2.addScore(65);
+        s2.addScore(75);
+        s2.addScore(70);
+
+        manager.addStudent(s1);
+        manager.addStudent(s2);
+
+        System.out.println("1. Display all students");
+        System.out.println("2. Search student");
+        System.out.println("3. Remove student");
+        System.out.println("4. Calculate class average");
+
+        System.out.print("Enter choice: ");
+        int choice = sc.nextInt();
+
+        switch (choice) {
+            case 1:
+                manager.displayAllStudents();
+                break;
+
+            case 2:
+                System.out.print("Enter student ID: ");
+                int id = sc.nextInt();
+
+                Student found = manager.findStudent(id);
+
+                if (found != null) {
+                    found.display();
+                } else {
+                    System.out.println("Student not found");
+                }
+                break;
+
+            case 3:
+                System.out.print("Enter student ID: ");
+                int removeId = sc.nextInt();
+                manager.removeStudent(removeId);
+                break;
+
+            case 4:
+                System.out.println(
+                    "Class Average: " + manager.calculateClassAverage()
+                );
+                break;
+
+            default:
+                System.out.println("Invalid choice");
+        }
+
+        sc.close();
+    }
+}
